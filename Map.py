@@ -122,3 +122,11 @@ class Map:
                     pass
                 elif typ == 'explode':
                     pass
+
+    def position_bonus(self):
+        for cell in self.cells:
+            if cell.est_bonus():
+                return [cell.x, cell.y]
+
+    def position_joueurs(self):
+        return [j.current_pos() for j in self.joueurs]

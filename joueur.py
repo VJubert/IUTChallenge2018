@@ -29,6 +29,8 @@ class Joueur:
     score = 0
 
     def current_pos(self):
+        if len(self.positions) == 0:
+            return None
         return self.positions[0]
 
     def __init__(self, id, pos, rot):

@@ -2,6 +2,7 @@ from queue import PriorityQueue
 
 
 def aStar(graph, start, goal):
+    start, goal = tuple(start), tuple(goal)
     if start == goal:
         return []
 
