@@ -14,6 +14,7 @@ from moves import *
 class ClientConcoursProg(asyncio.Protocol):
 
     def __init__(self, loop):
+        self.accu = b""
         self.loop = loop
         self.state = 0
         self.liste_actions = [("move", "shoot"), ("move",),
@@ -29,14 +30,17 @@ class ClientConcoursProg(asyncio.Protocol):
         self.send_message({"nickname": "TestCDout!"})
 
     def data_received(self, data):
-        for d in data.decode().strip().split("\n"):
-            self.traite_donnees(json.loads(d))
+        self.accu += data
+        try:
+            for d in self.accu.decode().strip().split("\n"):
+                self.traite_donnees(json.loads(d))
+            self.accu = b""
+        except Exception as e:
+            print(e)
+            pass
 
     def traite_donnees(self, donnees):
-        # print("         NEW TURN            ")
-        # print(self.joueurs)
-        # print(self.projectiles)
-        # print(donnees)
+
         if "idJoueur" in donnees:
             self.idJoueur = donnees["idJoueur"]
             self.joueurs[self.idJoueur] = Joueur(self.idJoueur, None, None)
@@ -99,13 +103,15 @@ class ClientConcoursProg(asyncio.Protocol):
                             [rotate_to(cast_rot_inverse(joueur.direction), rotation_requise(joueur.current_pos(), pos)),
                              "shoot"])
                         return
+                        
 
             moi = self.map.get_joueur(self.idJoueur)
             ma_pos = moi.current_pos()
 
             dest = self.map.position_bonus()
             if dest is None:
-                dest_joueurs = [pos for pos in self.map.position_joueurs() if pos is not None and pos != ma_pos]
+                dest_joueurs = [pos for pos in self.map.position_joueurs(
+                ) if pos is not None and pos != ma_pos]
 
                 if len(dest_joueurs) == 0:
                     dest = (self.map.bornes[0] // 2, self.map.bornes[1] // 2)
@@ -115,19 +121,20 @@ class ClientConcoursProg(asyncio.Protocol):
             path = aStar(self.map, ma_pos, dest)
 
             if len(path) > 0:
-                shoot = self.map.get_at(*path[0]).est_mur_traversabel()
+                # shoot = self.map.get_at(*path[0]).est_mur_traversabel()
+
                 rot_req = rotation_requise(ma_pos, path[0])
                 rotation = rotate_to(cast_rot_inverse(moi.direction), rot_req)
                 if rotation is None:
-                    if shoot:
-                        self.send_message(["move", "shoot"])
-                    else:
-                        self.send_message(["move"])
+                    # if shoot:
+                    self.send_message(["move"])
+                    # else:
+                    #     self.send_message(["move"])
                 else:
-                    if shoot:
-                        self.send_message([rotation])
-                    else:
-                        self.send_message([rotation, "shoot"])
+                    # if shoot:
+                    #     self.send_message([rotation])
+                    # else:
+                    self.send_message([rotation])
 
         # TODO move to next bonus
 
