@@ -7,6 +7,7 @@ import argparse
 
 from Map import *
 from joueur import Joueur
+from PathFindinf import *
 
 
 class ClientConcoursProg(asyncio.Protocol):
@@ -48,7 +49,7 @@ class ClientConcoursProg(asyncio.Protocol):
 
                 # todo create joueur
                 None
-
+        aStar(self.joueur[self.idJoueur].position,(0,0))
         action = self.liste_actions[self.state]
         self.state = (self.state + 1) % len(self.liste_actions)
         self.send_message(action)
