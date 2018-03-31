@@ -59,16 +59,16 @@ class ClientConcoursProg(asyncio.Protocol):
                     (pos, dir) = self.projectiles[id]
                     self.projectiles[id] = (newPos, dir)
                 if "explode" == action:
-                    None
+                    pos = msg[3]
+                    posList = msg[4]
+                    tankDone = msg[5]
+                    del (self.projectiles[id])
             if "shoot" in msg:
                 idjoueur = msg[0]
                 idproj = msg[2]
                 pos = msg[3]
                 dir = msg[4]
                 self.projectiles[idproj] = (pos, dir)
-
-                # todo create joueur
-                None
 
         aStar(self.joueur[self.idJoueur].position, (0, 0))
         print(self.joueurs)
