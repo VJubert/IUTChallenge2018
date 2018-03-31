@@ -8,11 +8,9 @@ class Joueur:
 
     def __init__(self, id, pos, rot):
         self.id = id
-        self.positions.insert(0, pos)
-        self.direction = self.cast_rot(rot)
-
-    def __init__(self, id):
-        self.id = id
+        if not pos is None:
+            self.positions.insert(0, pos)
+            self.direction = self.cast_rot(rot)
 
     def update(self, position, direction):
         self.positions.insert(0, tuple(position))
