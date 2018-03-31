@@ -5,8 +5,9 @@ import random
 import sys
 import argparse
 
-from joueur import Joueur
+from joueur import Joueur, cast_rot_inverse
 from PathFinding import *
+from moves import *
 
 
 class ClientConcoursProg(asyncio.Protocol):
@@ -32,10 +33,10 @@ class ClientConcoursProg(asyncio.Protocol):
             self.traite_donnees(json.loads(d))
 
     def traite_donnees(self, donnees):
-        print("         NEW TURN            ")
-        print(self.joueurs)
-        print(self.projectiles)
-        print(donnees)
+        # print("         NEW TURN            ")
+        # print(self.joueurs)
+        # print(self.projectiles)
+        # print(donnees)
         if "idJoueur" in donnees:
             self.idJoueur = donnees["idJoueur"]
             self.joueurs[self.idJoueur] = Joueur(self.idJoueur, None, None)
@@ -83,17 +84,31 @@ class ClientConcoursProg(asyncio.Protocol):
                 dir = msg[5]
                 self.projectiles[idproj] = (pos, dir)
 
-        aStar(self.map, self.joueurs[self.idJoueur].current_pos(), (2, 2))
+        if self.map is not None:
+            self.map.update(donnees)
+
+        moi = self.map.get_joueur(self.idJoueur)
+
+        ma_pos = moi.current_pos()
+        path = aStar(self.map, ma_pos, (2, 2))
+
+        if len(path) > 0:
+            rot_req = rotation_requise(ma_pos, path[0])
+            rotation = rotate_to(cast_rot_inverse(moi.direction), rot_req)
+
+            if rotation is None:
+                self.send_message(["move"])
+            else:
+                self.send_message([rotation])
+        else:
+            self.send_message(["shoot"])
 
         # for id, (pos, dir) in self.projectiles.items():
         #     print(self.proj_coming((pos,dir)))
 
-        if self.map is not None:
-            self.map.update(donnees)
-
-        action = self.liste_actions[self.state]
-        self.state = (self.state + 1) % len(self.liste_actions)
-        self.send_message(action)
+        # action = self.liste_actions[self.state]
+        # self.state = (self.state + 1) % len(self.liste_actions)
+        # self.send_message(action)
 
     def proj_coming(self, proj, me, map):
         (pos, dir) = proj

@@ -37,6 +37,10 @@ import Map
 
 
 def aStar(graph, start, goal):
+    if start == goal:
+        return []
+
+
     frontier = PriorityQueue()
     frontier.put(start, 0)
     came_from = {}
@@ -61,7 +65,8 @@ def aStar(graph, start, goal):
     path = []
     current = goal
     while current is not None:
-        path.insert(0, current)
+        # path.insert(0, current)
+        path.append(current)
         current = came_from[current]
-    print(path)
+    # print(path)
     return path
