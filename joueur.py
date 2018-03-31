@@ -1,4 +1,4 @@
-def cast_rot(self, rot):
+def cast_rot(rot):
     if rot == [0, 1]:
         return 3
     elif rot == [0, -1]:
@@ -9,7 +9,7 @@ def cast_rot(self, rot):
         return 0
 
 
-def cast_rot_inverse(self, rot):
+def cast_rot_inverse(rot):
     if rot == 0:
         return [-1, 0]
     elif rot == 1:
