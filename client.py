@@ -5,9 +5,10 @@ import random
 import sys
 import argparse
 
-from joueur import Joueur
+import Map
+from joueur import Joueur, cast_rot_inverse
 from PathFinding import *
-from moves import cost_orientation
+from moves import *
 
 
 class ClientConcoursProg(asyncio.Protocol):
@@ -32,15 +33,10 @@ class ClientConcoursProg(asyncio.Protocol):
             self.traite_donnees(json.loads(d))
 
     def traite_donnees(self, donnees):
-        print("         NEW TURN            ")
-        print(self.joueurs)
-        print(self.projectiles)
-        print(donnees)
-        try:
-            print(self.joueurs[self.idJoueur].current_pos())
-        except:
-            print("failed")
-
+        # print("         NEW TURN            ")
+        # print(self.joueurs)
+        # print(self.projectiles)
+        # print(donnees)
         if "idJoueur" in donnees:
             self.idJoueur = donnees["idJoueur"]
             self.joueurs[self.idJoueur] = Joueur(self.idJoueur, None, None)
@@ -101,13 +97,29 @@ class ClientConcoursProg(asyncio.Protocol):
                 else:
                     # barre toi
                     pass
-                
-        if self.map is not None:
-            self.map.update(donnees)
 
-        action = self.liste_actions[self.state]
-        self.state = (self.state + 1) % len(self.liste_actions)
-        self.send_message(action)
+        # if self.map is not None:
+        #     self.map.update(donnees)
+        #
+        #     moi = self.map.get_joueur(self.idJoueur)
+        #
+        #     ma_pos = moi.current_pos()
+        #     path = aStar(self.map, ma_pos, (2, 2))
+        #
+        #     if len(path) > 0:
+        #         rot_req = rotation_requise(ma_pos, path[0])
+        #         rotation = rotate_to(cast_rot_inverse(moi.direction), rot_req)
+        #
+        #         if rotation is None:
+        #             self.send_message(["move"])
+        #         else:
+        #             self.send_message([rotation])
+        #     else:
+        #         self.send_message(["shoot"])
+
+        # action = self.liste_actions[self.state]
+        # self.state = (self.state + 1) % len(self.liste_actions)
+        # self.send_message(action)
 
     def calc_retourne(self, me, proj):
         (x, y) = proj
