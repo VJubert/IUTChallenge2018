@@ -89,8 +89,7 @@ class ClientConcoursProg(asyncio.Protocol):
             joueur = self.map.get_joueur(self.idJoueur)
 
             for id, (pos, dir) in self.projectiles.items():
-                coming = self.proj_coming(
-                    (pos, dir), self.joueurs[self.idJoueur], self.map)
+                coming = self.proj_coming((pos, dir), joueur, self.map)
                 if coming > -1:
                     cost = cost_orientation(
                         joueur.direction, self.calc_retourne(joueur, pos))
