@@ -65,7 +65,6 @@ class ClientConcoursProg(asyncio.Protocol):
                     pos = msg[3]
                     posList = msg[4]
                     tankDone = msg[5]
-
                     cell = self.map.get_at(*pos)
                     if tankDone:
                         j = cell.joueur
@@ -84,7 +83,10 @@ class ClientConcoursProg(asyncio.Protocol):
                 dir = msg[5]
                 self.projectiles[idproj] = (pos, dir)
 
-        # aStar(self.map, self.joueurs[self.idJoueur].current_pos(), (0, 0))
+        aStar(self.map, self.joueurs[self.idJoueur].current_pos(), (2, 2))
+
+        # for id, (pos, dir) in self.projectiles.items():
+        #     print(self.proj_coming((pos,dir)))
 
         if self.map is not None:
             self.map.update(donnees)
@@ -92,6 +94,19 @@ class ClientConcoursProg(asyncio.Protocol):
         action = self.liste_actions[self.state]
         self.state = (self.state + 1) % len(self.liste_actions)
         self.send_message(action)
+
+    def proj_coming(self, proj, me, map):
+        (pos, dir) = proj
+        (myPos) = me.current_pos()
+        x = pos[0]
+        y = pos[1]
+        while True:
+            if x == myPos[0] and y == myPos[1]:
+                return abs(myPos[0] - pos[0]) + abs(myPos[1] - pos[1])
+            if map.get_at(x, y).est_mur():
+                return -1
+            x += dir[0]
+            y += dir[1]
 
     def connection_lost(self, exc):
         self.loop.stop()

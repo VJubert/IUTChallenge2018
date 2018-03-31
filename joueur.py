@@ -29,7 +29,7 @@ class Joueur:
     score = 0
 
     def current_pos(self):
-        return self.positions[0];
+        return self.positions[0]
 
     def __init__(self, id, pos, rot):
         self.id = id
@@ -46,9 +46,6 @@ class Joueur:
 
     def update_pos(self, pos):
         self.positions.insert(0, tuple(pos))
-
-    def is_safe(self):
-        False
 
     def __str__(self) -> str:
         return self.id + " " + self.positions[0]

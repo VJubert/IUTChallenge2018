@@ -62,6 +62,7 @@ class Map:
             n.append((x, y - 1))
         if y + 1 <= self.bornes[1] and not self.get_at(x, y + 1).est_mur():
             n.append((x, y + 1))
+        return n;
 
     def get_joueur(self, id):
         for j in self.joueurs:
