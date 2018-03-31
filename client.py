@@ -65,6 +65,17 @@ class ClientConcoursProg(asyncio.Protocol):
                     pos = msg[3]
                     posList = msg[4]
                     tankDone = msg[5]
+
+                    cell = self.map.get_at(*pos)
+                    if tankDone:
+                        j = cell.joueur
+                        j.positions = []
+                        cell.joueur = None
+
+                    for pos_mur in posList:
+                        mur = self.map.get_at(*pos_mur)
+                        mur.cassable = None
+
                     del (self.projectiles[id])
             if "shoot" in msg:
                 idjoueur = msg[2]
