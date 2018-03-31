@@ -16,6 +16,9 @@ class Joueur:
         self.positions.insert(0, tuple(position))
         self.direction = self.cast_rot(direction)
 
+    def update_dir(self, direction):
+        self.direction = self.cast_rot(direction)
+
     def is_safe(self):
         False
 
