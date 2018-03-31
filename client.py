@@ -56,13 +56,6 @@ class ClientConcoursProg(asyncio.Protocol):
         for d in data.decode().strip().split("\n"):
             self.traite_donnees(json.loads(d))
 
-    def update_or_create_joueur(self, joueurs):
-        for (id, pos) in joueurs:
-            if id in self.joueurs:
-                joueur[id].update(pos)
-            else :
-                self.joueurs[id]=Joueur(id, pos)
-
     def traite_donnees(self, donnees):
         if "idJoueur" in donnees:
             self.idJoueur = donnees["idJoueur"]
