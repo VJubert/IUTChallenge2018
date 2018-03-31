@@ -25,8 +25,7 @@ class ClientConcoursProg(asyncio.Protocol):
 
     def connection_made(self, transport):
         self.transport = transport
-        print("Connecte")
-        self.send_message({"nickname": "Tester C'est Douter !"})
+        self.send_message({"nickname": "TestCDout!"})
 
     def data_received(self, data):
         for d in data.decode().strip().split("\n"):
@@ -103,8 +102,8 @@ class ClientConcoursProg(asyncio.Protocol):
         else:
             self.send_message(["shoot"])
 
-        # for id, (pos, dir) in self.projectiles.items():
-        #     print(self.proj_coming((pos,dir)))
+        for id, (pos, dir) in self.projectiles.items():
+            print("proj_coming", self.proj_coming((pos, dir), self.joueurs[self.idJoueur], self.map))
 
         # action = self.liste_actions[self.state]
         # self.state = (self.state + 1) % len(self.liste_actions)

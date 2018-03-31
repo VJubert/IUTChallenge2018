@@ -1,45 +1,9 @@
 from queue import PriorityQueue
 
-import Map
-
-
-# def aStar(map, start, goal):
-#     print("fsqyf")
-#     queue = [start]
-#     cost = {start: 0}
-#     prec = {start: None}
-#     priority = {start: 0}
-#
-#     while len(queue) > 0:
-#         print(len(queue))
-#         (x, y) = queue.pop(0)
-#         if (x, y) == goal:
-#             print("goal")
-#             break
-#         for (nl, nc) in map.get_neighbors(x, y):
-#             print(nl, " ", nc, " ", x, " ", y)
-#             newCost = cost[(x, y)] + 1
-#             if not (nl, nc) in cost or cost[(nl, nc)] < newCost:
-#                 cost[(nl, nc)] = newCost
-#                 queue.append((nl, nc))
-#                 prec[(nl, nc)] = (x, y)
-#                 priority[(nl, nc)] = newCost + 1
-#         comparer = lambda x: priority[x]
-#         queue.sort(key=comparer)
-#
-#     path = []
-#     current = goal
-#     while current is not None:
-#         path.insert(0, current)
-#         current = prec[current]
-#     print(path)
-#     return path
-
 
 def aStar(graph, start, goal):
     if start == goal:
         return []
-
 
     frontier = PriorityQueue()
     frontier.put(start, 0)
