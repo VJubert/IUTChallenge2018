@@ -29,7 +29,7 @@ class Joueur:
     score = 0
 
     def current_pos(self):
-        return self.positions[0];
+        return self.positions[0]
 
     def __init__(self, id, pos, rot):
         self.id = id
