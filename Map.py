@@ -1,4 +1,4 @@
-from client import *
+from joueur import Joueur
 
 
 class Cell:
