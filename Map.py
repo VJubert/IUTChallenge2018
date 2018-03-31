@@ -84,6 +84,12 @@ class Map:
         j.score += cell.points
         cell.points = None
 
+    def respawn_joueur(self, id, pos):
+        j = self.get_joueur(id)
+        j.update_pos(pos)
+        cell = self.get_at(*pos)
+        cell.set_joueur(j)
+
     def update(self, events):
         for e in events:
             what = e[0]
