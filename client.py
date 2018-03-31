@@ -5,7 +5,6 @@ import random
 import sys
 import argparse
 
-from Map import *
 from joueur import Joueur
 from PathFinding import *
 
@@ -33,13 +32,17 @@ class ClientConcoursProg(asyncio.Protocol):
             self.traite_donnees(json.loads(d))
 
     def traite_donnees(self, donnees):
+        print("         NEW TURN            ")
+        print(self.joueurs)
+        print(self.projectiles)
+        print(donnees)
         if "idJoueur" in donnees:
             self.idJoueur = donnees["idJoueur"]
             self.joueurs[self.idJoueur] = Joueur(self.idJoueur, None, None)
             return
         if "map" in donnees:
             self.monde = donnees
-            self.map = Map(donnees)
+            self.map = Map.Map(donnees)
             for j in donnees["joueurs"]:
                 id = j["id"]
                 position = j["position"]
@@ -70,8 +73,8 @@ class ClientConcoursProg(asyncio.Protocol):
                 dir = msg[4]
                 self.projectiles[idproj] = (pos, dir)
 
-        aStar(self.joueurs[self.idJoueur].current_pos(), (0, 0))
-        print(self.joueurs)
+        # aStar(self.map, self.joueurs[self.idJoueur].current_pos(), (0, 0))
+
         if self.map is not None:
             self.map.update(donnees)
 

@@ -49,3 +49,6 @@ class Joueur:
 
     def is_safe(self):
         False
+
+    def __str__(self) -> str:
+        return self.id + " " + self.positions[0]
