@@ -67,10 +67,10 @@ class ClientConcoursProg(asyncio.Protocol):
                     tankDone = msg[5]
                     del (self.projectiles[id])
             if "shoot" in msg:
-                idjoueur = msg[0]
-                idproj = msg[2]
-                pos = msg[3]
-                dir = msg[4]
+                idjoueur = msg[2]
+                idproj = msg[3]
+                pos = msg[4]
+                dir = msg[5]
                 self.projectiles[idproj] = (pos, dir)
 
         # aStar(self.map, self.joueurs[self.idJoueur].current_pos(), (0, 0))
