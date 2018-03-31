@@ -84,7 +84,7 @@ class Map:
 
     def rotate_joueur(self, id, dir):
         j = self.get_joueur(id)
-        j.update_dir(cast_rot(dir))
+        j.update_dir(dir)
 
     def add_bonus(self, id, pos_bonus):
         j = self.get_joueur(id)
