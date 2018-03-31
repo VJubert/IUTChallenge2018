@@ -15,8 +15,15 @@ class Joueur :
 
     def __init__(self, id, pos, rot):
         self.id=id;
-        self.positions.insert(0,pos)
-        #TODO DIRECTION
+        self.positions.insert(0,pos)-
+        if rot == [0,1]:
+            self.direction=3
+        else if rot == [0,-1]:
+            self.direction=1
+        else if rot == [1,0]:
+            self.direction=2
+        else if rot == [-1,0]:
+            self.direction=0
 
     def __init__(self, id):
         self.id=id;
