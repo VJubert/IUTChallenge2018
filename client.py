@@ -24,7 +24,7 @@ class ClientConcoursProg(asyncio.Protocol):
 
     def connection_made(self, transport):
         self.transport = transport
-        print("Connecté")
+        print("Connecte")
         self.send_message({"nickname": "Tester C'est Douter !"})
 
     def data_received(self, data):
