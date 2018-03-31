@@ -109,7 +109,7 @@ class Map:
                 elif typ == 'shoot':
                     pass
                 elif typ == 'respawn':
-                    pass
+                    self.respawn_joueur(e[2], e[3])
             elif what == 'projectile':
                 if typ == 'move':
                     pass
