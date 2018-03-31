@@ -112,7 +112,6 @@ class ClientConcoursProg(asyncio.Protocol):
                 ]
 
                 if len(dest_joueurs) == 0:
-                    print("kjbjhlbg")
                     dest = (self.map.bornes[0] // 2, self.map.bornes[1] // 2)
                 else:
                     dest = dest_joueurs[0]
