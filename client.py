@@ -84,8 +84,6 @@ class ClientConcoursProg(asyncio.Protocol):
                 dir = msg[5]
                 self.projectiles[idproj] = (pos, dir)
 
-        aStar(self.map, self.joueurs[self.idJoueur].current_pos(), (2, 2))
-
         joueur = self.joueurs[self.idJoueur]
         for id, (pos, dir) in self.projectiles.items():
             coming = self.proj_coming((pos, dir), self.joueurs[self.idJoueur], self.map)
@@ -93,33 +91,12 @@ class ClientConcoursProg(asyncio.Protocol):
                 cost = cost_orientation(joueur.direction, self.calc_retourne(joueur, pos))
                 if cost < coming:
                     # retourne et tire
-                    pass
-                else:
-                    # barre toi
-                    pass
+                    self.send_message(
+                        [rotate_to(cast_rot_inverse(joueur.direction), rotation_requise(joueur.current_pos(), pos)),
+                         "shoot"])
+                    return
 
-        # if self.map is not None:
-        #     self.map.update(donnees)
-        #
-        #     moi = self.map.get_joueur(self.idJoueur)
-        #
-        #     ma_pos = moi.current_pos()
-        #     path = aStar(self.map, ma_pos, (2, 2))
-        #
-        #     if len(path) > 0:
-        #         rot_req = rotation_requise(ma_pos, path[0])
-        #         rotation = rotate_to(cast_rot_inverse(moi.direction), rot_req)
-        #
-        #         if rotation is None:
-        #             self.send_message(["move"])
-        #         else:
-        #             self.send_message([rotation])
-        #     else:
-        #         self.send_message(["shoot"])
-
-        # action = self.liste_actions[self.state]
-        # self.state = (self.state + 1) % len(self.liste_actions)
-        # self.send_message(action)
+        #TODO move to next bonus
 
     def calc_retourne(self, me, proj):
         (x, y) = proj
