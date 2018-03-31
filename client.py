@@ -5,6 +5,7 @@ import random
 import sys
 import argparse
 
+import Map
 from joueur import Joueur, cast_rot_inverse
 from PathFinding import *
 from moves import *
@@ -86,24 +87,21 @@ class ClientConcoursProg(asyncio.Protocol):
         if self.map is not None:
             self.map.update(donnees)
 
-        moi = self.map.get_joueur(self.idJoueur)
+            moi = self.map.get_joueur(self.idJoueur)
 
-        ma_pos = moi.current_pos()
-        path = aStar(self.map, ma_pos, (2, 2))
+            ma_pos = moi.current_pos()
+            path = aStar(self.map, ma_pos, (2, 2))
 
-        if len(path) > 0:
-            rot_req = rotation_requise(ma_pos, path[0])
-            rotation = rotate_to(cast_rot_inverse(moi.direction), rot_req)
+            if len(path) > 0:
+                rot_req = rotation_requise(ma_pos, path[0])
+                rotation = rotate_to(cast_rot_inverse(moi.direction), rot_req)
 
-            if rotation is None:
-                self.send_message(["move"])
+                if rotation is None:
+                    self.send_message(["move"])
+                else:
+                    self.send_message([rotation])
             else:
-                self.send_message([rotation])
-        else:
-            self.send_message(["shoot"])
-
-        for id, (pos, dir) in self.projectiles.items():
-            print("proj_coming", self.proj_coming((pos, dir), self.joueurs[self.idJoueur], self.map))
+                self.send_message(["shoot"])
 
         # action = self.liste_actions[self.state]
         # self.state = (self.state + 1) % len(self.liste_actions)
