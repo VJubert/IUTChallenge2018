@@ -38,6 +38,14 @@ class ClientConcoursProg(asyncio.Protocol):
             self.monde = donnees
             self.map = Map(donnees)
             for j in donnees["joueurs"]:
+                id = j["id"]
+                position = j["position"]
+                direction = j["direction"]
+                if id in self.joueurs:
+                    self.joueurs[id].update(position, direction)
+                else:
+                    self.joueurs[id] = Joueur(id, position, direction)
+
                 # todo create joueur
                 None
 

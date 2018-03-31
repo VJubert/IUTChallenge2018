@@ -9,20 +9,24 @@ class Joueur:
     def __init__(self, id, pos, rot):
         self.id = id
         self.positions.insert(0, pos)
-        if rot == [0, 1]:
-            self.direction = 3
-        elif rot == [0, -1]:
-            self.direction = 1
-        elif rot == [1, 0]:
-            self.direction = 2
-        elif rot == [-1, 0]:
-            self.direction = 0
+        self.direction = self.cast_rot(rot)
 
     def __init__(self, id):
         self.id = id
 
-    def update(self, position):
-        self.positions.insert(0, position)
+    def update(self, position, direction):
+        self.positions.insert(0, tuple(position))
+        self.direction = self.cast_rot(direction)
 
     def is_safe(self):
         False
+
+    def cast_rot(self, rot):
+        if rot == [0, 1]:
+            return 3
+        elif rot == [0, -1]:
+            return 1
+        elif rot == [1, 0]:
+            return 2
+        elif rot == [-1, 0]:
+            return 0
