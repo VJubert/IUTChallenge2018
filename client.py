@@ -7,6 +7,7 @@ import argparse
 
 from joueur import Joueur
 from PathFinding import *
+from moves import cost_orientation
 
 
 class ClientConcoursProg(asyncio.Protocol):
@@ -89,15 +90,38 @@ class ClientConcoursProg(asyncio.Protocol):
 
         aStar(self.map, self.joueurs[self.idJoueur].current_pos(), (2, 2))
 
+        joueur = self.joueurs[self.idJoueur]
         for id, (pos, dir) in self.projectiles.items():
-            print("proj_coming", self.proj_coming((pos, dir), self.joueurs[self.idJoueur], self.map))
-
+            coming = self.proj_coming((pos, dir), self.joueurs[self.idJoueur], self.map)
+            if coming > -1:
+                cost = cost_orientation(joueur.direction, self.calc_retourne(joueur, pos))
+                if cost < coming:
+                    # retourne et tire
+                    pass
+                else:
+                    # barre toi
+                    pass
+                
         if self.map is not None:
             self.map.update(donnees)
 
         action = self.liste_actions[self.state]
         self.state = (self.state + 1) % len(self.liste_actions)
         self.send_message(action)
+
+    def calc_retourne(self, me, proj):
+        (x, y) = proj
+        (myx, myy) = me.current_pos()
+        if x == myx:
+            if y < myy:
+                return [0, -1]
+            else:
+                return [0, 1]
+        elif y == myy:
+            if x < myx:
+                return [-1, 0]
+            else:
+                return [1, 0]
 
     def proj_coming(self, proj, me, map):
         (pos, dir) = proj
@@ -106,7 +130,7 @@ class ClientConcoursProg(asyncio.Protocol):
         y = pos[1]
         while True:
             if x == myPos[0] and y == myPos[1]:
-                return abs(myPos[0] - pos[0]) + abs(myPos[1] - pos[1])
+                return (abs(myPos[0] - pos[0]) + abs(myPos[1] - pos[1])) / 2
             if map.get_at(x, y).est_mur():
                 return -1
             x += dir[0]
