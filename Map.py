@@ -45,13 +45,13 @@ class Map:
 
     def get_neighbors(self,(x, y)):
         n = []
-        if x-1>=0:
+        if x-1>=0 and not get_at(x-1,y).est_mur():
             n.append((x-1,y))
-        if x+1<=self.bornes[0]:
+        if x+1<=self.bornes[0] and not get_at(x+1,y).est_mur():
             n.append((x+1,y))
-        if y-1>=0:
+        if y-1>=0 and not get_at(x,y-1).est_mur():
             n.append((x,y-1))
-        if y+1<=self.bornes[1]:
+        if y+1<=self.bornes[1] get_at(x,y+1).est_mur():
             n.append((x,y+1))
 
     def get_joueur(self, id):
