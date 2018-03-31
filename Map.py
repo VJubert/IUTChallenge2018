@@ -2,17 +2,11 @@ from joueur import *
 
 
 class Cell:
-    def __init__(self, data):
-        self.x, self.y = data['pos']
+    def __init__(self, x, y):
+        self.x, self.y = x, y
 
         self.cassable = None
         self.points = None
-
-        if 'cassable' in data:
-            self.cassable = data['cassable']
-        if 'points' in data:
-            self.points = data['points']
-
         self.joueur = None
 
     def set_joueur(self, joueur):
@@ -30,21 +24,33 @@ class Cell:
 
 class Map:
     def __init__(self, json):
-        self.cells = [Cell(x) for x in json['map']]
         self.joueurs = []
 
-        xs = {c['pos'][0] for c in json['map']}
-        ys = {c['pos'][1] for c in json['map']}
-        self.bornes = [max(xs), max(ys)]
+        # xs = {c['pos'][0] for c in json['map']}
+        # ys = {c['pos'][1] for c in json['map']}
+        # self.bornes = [max(xs), max(ys)]
+
+        self.bornes = json['map'][-1]['pos']
+        self.cells = [Cell(i % self.bornes[1], i // self.bornes[1])
+                      for i in range((self.bornes[0] + 1) * (self.bornes[1] + 1))]
+        self.cells.sort(key=lambda c: (c.x, c.y))
 
         for j in json['joueurs']:
             xj, yj = j['position']
             J = Joueur(j['id'], j['position'], j['direction'])
-            self.get_at(xj, yj).set_joueur(J)
+
+            cell = self.get_at(xj, yj)
+            cell.set_joueur(J)
             self.joueurs.append(J)
 
+        for d in json['map']:
+            cell = self.get_at(*d['pos'])
+            cell.points = d.get('points', None)
+            cell.cassable = d.get('cassable', None)
+
     def get_at(self, x, y):
-        return self.cells[x + y * (self.bornes[1] + 1)]
+        cell = self.cells[y + x * (self.bornes[1] + 1)]
+        return cell
 
     def get_neighbors(self, x, y):
         n = []
