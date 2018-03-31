@@ -47,8 +47,5 @@ class Joueur:
     def update_pos(self, pos):
         self.positions.insert(0, tuple(pos))
 
-    def is_safe(self):
-        False
-
     def __str__(self) -> str:
         return self.id + " " + self.positions[0]
