@@ -8,13 +8,20 @@ import argparse²
 class Joueur :
     #pile des positions
     positions=[]
+    #0 nord / 1 est / 2 sud / 3 ouest
+    direction=0
     id=0
     score=0
+
+    def __init__(self, id, pos, rot):
+        self.id=id;
+        self.positions.insert(0,pos)
+        #TODO DIRECTION
 
     def __init__(self, id):
         self.id=id;
 
-    def update(self, score, position):
+    def update(self, position):
         self.score=score;
         self.positions.insert(0,position):
 
@@ -30,6 +37,7 @@ class ClientConcoursProg(asyncio.Protocol):
         self.liste_actions = [("move", "shoot"), ("move",),
                               ("move",), ("move",), ("hrotate",)]
         self.monde = {}
+        self.joueurs={}
         self.idJoueur = -1
 
     def connection_made(self, transport):
@@ -41,9 +49,17 @@ class ClientConcoursProg(asyncio.Protocol):
         for d in data.decode().strip().split("\n"):
             self.traite_donnees(json.loads(d))
 
+    def update_or_create_joueur(self, joueurs):
+        for (id, pos) in joueurs:
+            if id in self.joueurs:
+                joueur[id].update(pos)
+            else :
+                self.joueurs[id]=Joueur(id, pos)
+
     def traite_donnees(self, donnees):
         if "idJoueur" in donnees:
             self.idJoueur = donnees["idJoueur"]
+            self.joueurs[id]=Joueur(self.idJoueur)
         if "map" in donnees:
             self.monde = donnees
             print("Nombre d'objets dans la carte :" + str(len(donnees["map"])))
