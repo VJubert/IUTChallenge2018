@@ -31,10 +31,9 @@ class ClientConcoursProg(asyncio.Protocol):
             self.traite_donnees(json.loads(d))
 
     def traite_donnees(self, donnees):
-        print(donnees)
         if "idJoueur" in donnees:
             self.idJoueur = donnees["idJoueur"]
-            self.joueurs[id] = Joueur(self.idJoueur)
+            self.joueurs[self.idJoueur] = Joueur(self.idJoueur, None, None)
         if "map" in donnees:
             self.monde = donnees
             self.map = Map(donnees)
@@ -47,9 +46,11 @@ class ClientConcoursProg(asyncio.Protocol):
                 else:
                     self.joueurs[id] = Joueur(id, position, direction)
 
+
                 # todo create joueur
                 None
         aStar(self.joueur[self.idJoueur].position,(0,0))
+        print(self.joueurs)
         action = self.liste_actions[self.state]
         self.state = (self.state + 1) % len(self.liste_actions)
         self.send_message(action)

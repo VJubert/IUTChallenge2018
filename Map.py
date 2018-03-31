@@ -40,3 +40,14 @@ class Map:
 
     def get_at(self, x, y):
         return self.cells[x + y * (self.bornes[1] + 1)]
+
+    def get_neighbors(self,(x, y)):
+        n = []
+        if x-1>=0:
+            n.append((x-1,y))
+        if x+1<=self.bornes[0]:
+            n.append((x+1,y))
+        if y-1>=0:
+            n.append((x,y-1))
+        if y+1<=self.bornes[1]:
+            n.append((x,y+1))
