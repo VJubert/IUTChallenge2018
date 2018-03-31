@@ -85,7 +85,22 @@ class ClientConcoursProg(asyncio.Protocol):
                 self.projectiles[idproj] = (pos, dir)
 
         if self.map is not None:
+            joueur = self.joueurs[self.idJoueur]
+            for id, (pos, dir) in self.projectiles.items():
+                coming = self.proj_coming(
+                    (pos, dir), self.joueurs[self.idJoueur], self.map)
+                if coming > -1:
+                    cost = cost_orientation(
+                        joueur.direction, self.calc_retourne(joueur, pos))
+                    if cost < coming:
+                        # retourne et tire
+                        self.send_message(
+                            [rotate_to(cast_rot_inverse(joueur.direction), rotation_requise(joueur.current_pos(), pos)),
+                             "shoot"])
+                        return
+
             self.map.update(donnees)
+            
 
             moi = self.map.get_joueur(self.idJoueur)
             ma_pos = moi.current_pos()
@@ -112,12 +127,22 @@ class ClientConcoursProg(asyncio.Protocol):
                     self.send_message(["move", "shoot"])
                 else:
                     self.send_message([rotation, "shoot"])
-            else:
-                self.send_message(["shoot"])
 
-        # action = self.liste_actions[self.state]
-        # self.state = (self.state + 1) % len(self.liste_actions)
-        # self.send_message(action)
+        # TODO move to next bonus
+
+    def calc_retourne(self, me, proj):
+        (x, y) = proj
+        (myx, myy) = me.current_pos()
+        if x == myx:
+            if y < myy:
+                return [0, -1]
+            else:
+                return [0, 1]
+        elif y == myy:
+            if x < myx:
+                return [-1, 0]
+            else:
+                return [1, 0]
 
     def proj_coming(self, proj, me, map):
         (pos, dir) = proj
@@ -125,12 +150,14 @@ class ClientConcoursProg(asyncio.Protocol):
         (myPos) = me.current_pos()
         x = pos[0]
         y = pos[1]
-        if x == myPos[0] and y == myPos[1]:
-            return abs(myPos[0] - pos[0]) + abs(myPos[1] - pos[1])
-        if map.get_at(x, y).est_mur():
-            return -1
-        x += dir[0]
-        y += dir[1]
+
+        while True:
+            if x == myPos[0] and y == myPos[1]:
+                return (abs(myPos[0] - pos[0]) + abs(myPos[1] - pos[1])) / 2
+            if map.get_at(x, y).est_mur():
+                return -1
+            x += dir[0]
+            y += dir[1]
 
     def connection_lost(self, exc):
         self.loop.stop()
@@ -140,7 +167,8 @@ class ClientConcoursProg(asyncio.Protocol):
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description = "IA concours de programmation")
+    parser = argparse.ArgumentParser(
+        description="IA concours de programmation")
     parser.add_argument("hostname", help="Nom ou adresse IP du serveur de jeu")
     parser.add_argument("-p", dest="port", default=8889,
                         type=int, help="Port du serveur auquel se connecter")
