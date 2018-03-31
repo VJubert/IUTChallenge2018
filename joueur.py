@@ -21,7 +21,7 @@ def cast_rot_inverse(rot):
 
 
 class Joueur:
-    # pile des positions
+    # pile des positions (0 is top)
     positions = []
     # 0 nord / 1 est / 2 sud / 3 ouest
     direction = 0

@@ -106,4 +106,3 @@ class Map:
                     pass
                 elif typ == 'explode':
                     pass
->>>>>>> 1e35e0b6ffa2c67d42e115df508b7f27de4cb007

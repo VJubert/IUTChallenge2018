@@ -7,7 +7,7 @@ import argparse
 
 from Map import *
 from joueur import Joueur
-from PathFindinf import *
+from PathFinding import *
 
 
 class ClientConcoursProg(asyncio.Protocol):
@@ -20,6 +20,7 @@ class ClientConcoursProg(asyncio.Protocol):
         self.monde = {}
         self.map = None
         self.joueurs = {}
+        self.projectiles = {}
         self.idJoueur = -1
 
     def connection_made(self, transport):
@@ -35,6 +36,7 @@ class ClientConcoursProg(asyncio.Protocol):
         if "idJoueur" in donnees:
             self.idJoueur = donnees["idJoueur"]
             self.joueurs[self.idJoueur] = Joueur(self.idJoueur, None, None)
+            return
         if "map" in donnees:
             self.monde = donnees
             self.map = Map(donnees)
@@ -46,10 +48,29 @@ class ClientConcoursProg(asyncio.Protocol):
                     self.joueurs[id].update(position, direction)
                 else:
                     self.joueurs[id] = Joueur(id, position, direction)
+            return
+
+        for msg in donnees:
+            if "projectile" in msg:
+                action = msg[1]
+                id = msg[2]
+                if "move" == action:
+                    newPos = msg[3]
+                    (pos, dir) = self.projectiles[id]
+                    self.projectiles[id] = (newPos, dir)
+                if "explode" == action:
+                    None
+            if "shoot" in msg:
+                idjoueur = msg[0]
+                idproj = msg[2]
+                pos = msg[3]
+                dir = msg[4]
+                self.projectiles[idproj] = (pos, dir)
 
                 # todo create joueur
                 None
-        aStar(self.joueur[self.idJoueur].position,(0,0))
+
+        aStar(self.joueur[self.idJoueur].position, (0, 0))
         print(self.joueurs)
         if self.map is not None:
             self.map.update(donnees)
