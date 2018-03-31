@@ -89,8 +89,7 @@ class ClientConcoursProg(asyncio.Protocol):
             joueur = self.map.get_joueur(self.idJoueur)
 
             for id, (pos, dir) in self.projectiles.items():
-                coming = self.proj_coming(
-                    (pos, dir), self.joueurs[self.idJoueur], self.map)
+                coming = self.proj_coming((pos, dir), joueur, self.map)
                 if coming > -1:
                     cost = cost_orientation(
                         joueur.direction, self.calc_retourne(joueur, pos))
@@ -106,10 +105,7 @@ class ClientConcoursProg(asyncio.Protocol):
 
             dest = self.map.position_bonus()
             if dest is None:
-                dest_joueurs = [
-                    pos for pos in self.map.position_joueurs()
-                    if pos is not None and pos != ma_pos
-                ]
+                dest_joueurs = [pos for pos in self.map.position_joueurs() if pos is not None and pos != ma_pos]
 
                 if len(dest_joueurs) == 0:
                     dest = (self.map.bornes[0] // 2, self.map.bornes[1] // 2)
@@ -119,13 +115,19 @@ class ClientConcoursProg(asyncio.Protocol):
             path = aStar(self.map, ma_pos, dest)
 
             if len(path) > 0:
-                rot_req = rotation_requise(ma_pos, path[0])
+                shoot = self.map.get_at(*path[0]).est_mur_traversabel()
                 rot_req = rotation_requise(ma_pos, path[0])
                 rotation = rotate_to(cast_rot_inverse(moi.direction), rot_req)
                 if rotation is None:
-                    self.send_message(["move", "shoot"])
+                    if shoot:
+                        self.send_message(["move", "shoot"])
+                    else:
+                        self.send_message(["move"])
                 else:
-                    self.send_message([rotation, "shoot"])
+                    if shoot:
+                        self.send_message([rotation])
+                    else:
+                        self.send_message([rotation, "shoot"])
 
         # TODO move to next bonus
 
