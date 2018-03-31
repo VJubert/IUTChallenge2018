@@ -43,7 +43,7 @@ class Map:
     def get_at(self, x, y):
         return self.cells[x + y * (self.bornes[1] + 1)]
 
-    def get_neighbors(self,(x, y)):
+    def get_neighbors(self,x, y):
         n = []
         if x-1>=0 and not get_at(x-1,y).est_mur():
             n.append((x-1,y))
