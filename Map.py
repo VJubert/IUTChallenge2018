@@ -24,9 +24,6 @@ class Cell:
     def est_bonus(self):
         return self.points is not None
 
-    def est_mur(self):
-        return self.cassable is not None
-
 
 class Map:
     def __init__(self, json):
@@ -46,16 +43,16 @@ class Map:
     def get_at(self, x, y):
         return self.cells[x + y * (self.bornes[1] + 1)]
 
-    def get_neighbors(self, (x, y)):
+    def get_neighbors(self,(x, y)):
         n = []
-        if x - 1 >= 0:
-            n.append((x - 1, y))
-        if x + 1 <= self.bornes[0]:
-            n.append((x + 1, y))
-        if y - 1 >= 0:
-            n.append((x, y - 1))
-        if y + 1 <= self.bornes[1]:
-            n.append((x, y + 1))
+        if x-1>=0 and not get_at(x-1,y).est_mur():
+            n.append((x-1,y))
+        if x+1<=self.bornes[0] and not get_at(x+1,y).est_mur():
+            n.append((x+1,y))
+        if y-1>=0 and not get_at(x,y-1).est_mur():
+            n.append((x,y-1))
+        if y+1<=self.bornes[1] get_at(x,y+1).est_mur():
+            n.append((x,y+1))
 
     def get_joueur(self, id):
         for j in self.joueurs:
