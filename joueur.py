@@ -1,3 +1,25 @@
+def cast_rot(self, rot):
+    if rot == [0, 1]:
+        return 3
+    elif rot == [0, -1]:
+        return 1
+    elif rot == [1, 0]:
+        return 2
+    elif rot == [-1, 0]:
+        return 0
+
+
+def cast_rot_inverse(self, rot):
+    if rot == 0:
+        return [-1, 0]
+    elif rot == 1:
+        return [0, -1]
+    elif rot == 2:
+        return [1, 0]
+    elif rot == 3:
+        return [0, 1]
+
+
 class Joueur:
     # pile des positions
     positions = []
@@ -10,24 +32,17 @@ class Joueur:
         self.id = id
         if not pos is None:
             self.positions.insert(0, pos)
-            self.direction = self.cast_rot(rot)
+            self.direction = cast_rot(rot)
 
     def update(self, position, direction):
         self.positions.insert(0, tuple(position))
-        self.direction = self.cast_rot(direction)
+        self.direction = cast_rot(direction)
 
     def update_dir(self, direction):
-        self.direction = self.cast_rot(direction)
+        self.direction = cast_rot(direction)
+
+    def update_pos(self, pos):
+        self.positions.insert(0, tuple(pos))
 
     def is_safe(self):
         False
-
-    def cast_rot(self, rot):
-        if rot == [0, 1]:
-            return 3
-        elif rot == [0, -1]:
-            return 1
-        elif rot == [1, 0]:
-            return 2
-        elif rot == [-1, 0]:
-            return 0

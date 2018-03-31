@@ -45,8 +45,6 @@ class ClientConcoursProg(asyncio.Protocol):
                 else:
                     self.joueurs[id] = Joueur(id, position, direction)
 
-        print(self.joueurs)
-
         action = self.liste_actions[self.state]
         self.state = (self.state + 1) % len(self.liste_actions)
         self.send_message(action)
