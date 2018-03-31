@@ -7,7 +7,7 @@ import argparse
 
 from Map import *
 from joueur import Joueur
-from PathFindinf import *
+from PathFinding import *
 
 
 class ClientConcoursProg(asyncio.Protocol):
@@ -69,7 +69,8 @@ class ClientConcoursProg(asyncio.Protocol):
 
                 # todo create joueur
                 None
-        aStar(self.joueur[self.idJoueur].position,(0,0))
+
+        aStar(self.joueur[self.idJoueur].position, (0, 0))
         print(self.joueurs)
         if self.map is not None:
             self.map.update(donnees)
