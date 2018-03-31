@@ -70,7 +70,7 @@ class ClientConcoursProg(asyncio.Protocol):
                 dir = msg[4]
                 self.projectiles[idproj] = (pos, dir)
 
-        aStar(self.joueur[self.idJoueur].position, (0, 0))
+        aStar(self.joueurs[self.idJoueur].current_pos(), (0, 0))
         print(self.joueurs)
         if self.map is not None:
             self.map.update(donnees)
