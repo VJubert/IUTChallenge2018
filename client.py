@@ -85,8 +85,8 @@ class ClientConcoursProg(asyncio.Protocol):
 
         aStar(self.map, self.joueurs[self.idJoueur].current_pos(), (2, 2))
 
-        # for id, (pos, dir) in self.projectiles.items():
-        #     print(self.proj_coming((pos,dir)))
+        for id, (pos, dir) in self.projectiles.items():
+            print(self.proj_coming((pos, dir), self.joueurs[self.idJoueur], self.map))
 
         if self.map is not None:
             self.map.update(donnees)

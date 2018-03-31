@@ -34,7 +34,7 @@ class Joueur:
     def __init__(self, id, pos, rot):
         self.id = id
         if not pos is None:
-            self.positions.insert(0, pos)
+            self.positions.insert(0, tuple(pos))
             self.direction = cast_rot(rot)
 
     def update(self, position, direction):
