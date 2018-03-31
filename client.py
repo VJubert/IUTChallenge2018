@@ -85,7 +85,9 @@ class ClientConcoursProg(asyncio.Protocol):
                 self.projectiles[idproj] = (pos, dir)
 
         if self.map is not None:
-            joueur = self.joueurs[self.idJoueur]
+            self.map.update(donnees)
+            joueur = self.map.get_joueur(self.idJoueur)
+
             for id, (pos, dir) in self.projectiles.items():
                 coming = self.proj_coming(
                     (pos, dir), self.joueurs[self.idJoueur], self.map)
@@ -99,9 +101,6 @@ class ClientConcoursProg(asyncio.Protocol):
                              "shoot"])
                         return
 
-            self.map.update(donnees)
-            
-
             moi = self.map.get_joueur(self.idJoueur)
             ma_pos = moi.current_pos()
 
@@ -113,6 +112,7 @@ class ClientConcoursProg(asyncio.Protocol):
                 ]
 
                 if len(dest_joueurs) == 0:
+                    print("kjbjhlbg")
                     dest = (self.map.bornes[0] // 2, self.map.bornes[1] // 2)
                 else:
                     dest = dest_joueurs[0]
