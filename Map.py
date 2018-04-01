@@ -21,8 +21,8 @@ class Cell:
     def est_mur(self):
         return self.cassable is not None
 
-    def est_mur_traversabel(self):
-        return not self.cassable isx False
+    def est_mur_traversable(self):
+        return not self.cassable is False
 
 
 class Map:
@@ -57,13 +57,13 @@ class Map:
 
     def get_neighbors(self, x, y):
         n = []
-        if x - 1 >= 0 and not self.get_at(x - 1, y).est_mur():
+        if x - 1 >= 0 and  self.get_at(x - 1, y).est_mur_traversable():
             n.append((x - 1, y))
-        if x + 1 <= self.bornes[0] and not self.get_at(x + 1, y).est_mur():
+        if x + 1 <= self.bornes[0] and  self.get_at(x + 1, y).est_mur_traversable():
             n.append((x + 1, y))
-        if y - 1 >= 0 and not self.get_at(x, y - 1).est_mur():
+        if y - 1 >= 0 and  self.get_at(x, y - 1).est_mur_traversable():
             n.append((x, y - 1))
-        if y + 1 <= self.bornes[1] and not self.get_at(x, y + 1).est_mur():
+        if y + 1 <= self.bornes[1] and  self.get_at(x, y + 1).est_mur_traversable():
             n.append((x, y + 1))
         return n
 

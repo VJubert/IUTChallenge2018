@@ -21,6 +21,7 @@ def aStar(graph, start, goal):
 
         for next in graph.get_neighbors(current[0], current[1]):
             new_cost = cost_so_far[current] + 1
+
             if next not in cost_so_far or new_cost < cost_so_far[next]:
                 cost_so_far[next] = new_cost
                 priority = new_cost + 1
